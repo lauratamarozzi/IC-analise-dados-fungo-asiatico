@@ -1,0 +1,13 @@
+RELATÓRIO DE DIVISÃO DE TEs EM REGIÕES
+Projeto: GRAMEP - P. pachyrhizi XAI
+Autora: Laura Tamarozzi
+=======================================================
+
+Total lidas:         1958
+Descartadas:         1
+Processadas:         1957
+
+Média original:      5708.1 bp
+Média cabeça:        1902.4 bp
+Média meio:          1902.4 bp
+Média fim:           1903.3 bp

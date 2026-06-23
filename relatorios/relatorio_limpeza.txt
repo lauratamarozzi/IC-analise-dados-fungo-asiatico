@@ -1,0 +1,22 @@
+RELATÓRIO DE LIMPEZA - P. PACHYRHIZI
+=======================================================
+Data: 2026-03-31 08:33:17
+Autora: Laura Tamarozzi
+
+PADRÃO DE NOMENCLATURA IDENTIFICADO:
+- RLX: LTR retrotransposons (família principal)
+- DTX: DNA transposons (segunda família)
+- RIX, DHX, DMX, DXX, RSX: Outras famílias
+- noCat: Não categorizados (REMOVIDOS)
+
+CRITÉRIOS DE LIMPEZA APLICADOS:
+- Manter apenas famílias reconhecidas
+- Remover elementos 'noCat'
+- Tamanho mínimo: 100bp (500bp para incompletos)
+
+ARQUIVOS GERADOS:
+- dados_limpos/K8108_TEs_limpos.fasta
+- dados_limpos/K8108_genes_nao_TEs.fasta
+- dados_limpos/K8108_genes_balanceado.fasta
+- dados_limpos/K8108_TEs_removidos.fasta
+

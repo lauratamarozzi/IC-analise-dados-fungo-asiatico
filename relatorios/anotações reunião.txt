@@ -1,0 +1,41 @@
+famílias de kmers exclusivos do transposons
+
+explica como foi feita a separação - pipeline
+
+camada de explicabilidade com o gramep
+
+comparar oq caracteriza um conjunto (caracterizado) e o outro
+
+usar kmer par para fazer grafo
+
+usar PCA
+
+trtansforma cada seq em grafo, pega as mesmas clsses de transposons e identifica oq se diferem e oq se igualam
+
+e depois faz com os não transposons
+
+e depois faz uma diferença entre esses grafos
+
+e tira os dados fornecidos
+
+e identifica as estruturas q tem entre eles
+
+dai sai as features e usa algum gradecao features importances pra discutir o nível de assertividade
+
+-----------
+
+DETALHES TECNICOS
+
+entender os detalhes da entrada
+sinalizar a francismar pra construir o trab e dps pedir pra ela explicar a parte dela de como ela fez pra chegar naqueles resultados
+
+fazer o grafo for TEs e não TEs e subtrair um do outro e descobrir as features
+
+como separar oq é informativo e oq não é? entra no GRAMEP 
+
+pegar bloquinhos de 3 em 3
+
+
+da diferença de grafos:
+-1 com exclusão total
+-e outro com diferença de grau

@@ -1,0 +1,22 @@
+#ignora arquivos genômicos e de dados pesados
+*.fa
+*.fna
+*.fasta
+*.csv
+*.tsv
+dados_originais/
+dados/
+
+#ignora ambientes virtuais Python
+venv/
+env/
+.venv/
+
+#ignora caches do Jupyter Notebook e Python
+.ipynb_checkpoints/
+__pycache__/
+*.pyc
+
+#ignora arquivos do sistema operacional
+.DS_Store
+Thumbs.db

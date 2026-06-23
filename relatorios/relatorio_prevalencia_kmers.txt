@@ -1,0 +1,210 @@
+=================================================================
+RELATÓRIO DE PREVALÊNCIA DE K-MERS DE INTERESSE
+Projeto: Caracterização de TEs - P. pachyrhizi (K8108)
+Autora:  Laura Tamarozzi
+=================================================================
+
+Arquivo analisado : C:\Users\Usuario\OneDrive\Documentos\FACULDADE\iniciação científica\projeto_gramep\scripts\..\dados_limpos\balanceado\K8108_TEs_balanceado.fasta
+K-mers investigados: 15
+
+=================================================================
+LEGENDA DAS COLUNAS
+=================================================================
+  diversidade_simbolica          : quantos nucleotídeos distintos
+                                   compõem o k-mer (1-4).
+                                   1-2 = homopolímero/microssatélite.
+                                   3-4 = motivo específico.
+  ocorrencias_totais             : total de vezes que o k-mer
+                                   aparece em todo o FASTA de TEs.
+  n_sequencias_distintas         : em quantas cópias de TE diferentes
+                                   o k-mer aparece ao menos 1 vez.
+                                   (alto = assinatura recorrente)
+  ocorrencia_maxima_em_1_sequencia: a maior contagem do k-mer dentro
+                                   de uma ÚNICA sequência.
+                                   (alto = expansão local em tandem)
+  concentracao_pct               : % das ocorrências totais que vêm
+                                   dessa única sequência mais carregada.
+                                   (>70% = provavelmente ruído local)
+
+=================================================================
+ANÁLISE INDIVIDUAL
+=================================================================
+
+K-mer              : AAAAAAAAAAAAAAA
+Tipo               : Homopolímero/Microssatélite (ex: poly-A, AT-repeat)
+Diversidade        : 1 nucleotídeo(s) distinto(s)
+Ocorrências totais : 5802
+Sequências distintas: 485
+Máx. em 1 sequência: 148
+Concentração       : 2.6%
+Distribuição       : ASSINATURA RECORRENTE — espalhado por muitas cópias
+Interpretação      : Candidato forte a assinatura estrutural. Vale BLASTar.
+-----------------------------------------------------------------
+
+K-mer              : TAAAAAAAAAAAAAA
+Tipo               : Homopolímero/Microssatélite (ex: poly-A, AT-repeat)
+Diversidade        : 2 nucleotídeo(s) distinto(s)
+Ocorrências totais : 515
+Sequências distintas: 334
+Máx. em 1 sequência: 8
+Concentração       : 1.6%
+Distribuição       : ASSINATURA RECORRENTE — espalhado por muitas cópias
+Interpretação      : Candidato forte a assinatura estrutural. Vale BLASTar.
+-----------------------------------------------------------------
+
+K-mer              : AAAAAAATAAAAAAA
+Tipo               : Homopolímero/Microssatélite (ex: poly-A, AT-repeat)
+Diversidade        : 2 nucleotídeo(s) distinto(s)
+Ocorrências totais : 754
+Sequências distintas: 326
+Máx. em 1 sequência: 14
+Concentração       : 1.9%
+Distribuição       : ASSINATURA RECORRENTE — espalhado por muitas cópias
+Interpretação      : Candidato forte a assinatura estrutural. Vale BLASTar.
+-----------------------------------------------------------------
+
+K-mer              : AAAAAAAATAAAAAA
+Tipo               : Homopolímero/Microssatélite (ex: poly-A, AT-repeat)
+Diversidade        : 2 nucleotídeo(s) distinto(s)
+Ocorrências totais : 714
+Sequências distintas: 323
+Máx. em 1 sequência: 14
+Concentração       : 2.0%
+Distribuição       : ASSINATURA RECORRENTE — espalhado por muitas cópias
+Interpretação      : Candidato forte a assinatura estrutural. Vale BLASTar.
+-----------------------------------------------------------------
+
+K-mer              : TATATATATATATAT
+Tipo               : Homopolímero/Microssatélite (ex: poly-A, AT-repeat)
+Diversidade        : 2 nucleotídeo(s) distinto(s)
+Ocorrências totais : 1115
+Sequências distintas: 318
+Máx. em 1 sequência: 18
+Concentração       : 1.6%
+Distribuição       : ASSINATURA RECORRENTE — espalhado por muitas cópias
+Interpretação      : Candidato forte a assinatura estrutural. Vale BLASTar.
+-----------------------------------------------------------------
+
+K-mer              : ATATATATATATATA
+Tipo               : Homopolímero/Microssatélite (ex: poly-A, AT-repeat)
+Diversidade        : 2 nucleotídeo(s) distinto(s)
+Ocorrências totais : 1142
+Sequências distintas: 312
+Máx. em 1 sequência: 22
+Concentração       : 1.9%
+Distribuição       : ASSINATURA RECORRENTE — espalhado por muitas cópias
+Interpretação      : Candidato forte a assinatura estrutural. Vale BLASTar.
+-----------------------------------------------------------------
+
+K-mer              : AAAAAATAAAAAAAA
+Tipo               : Homopolímero/Microssatélite (ex: poly-A, AT-repeat)
+Diversidade        : 2 nucleotídeo(s) distinto(s)
+Ocorrências totais : 652
+Sequências distintas: 295
+Máx. em 1 sequência: 14
+Concentração       : 2.1%
+Distribuição       : ASSINATURA RECORRENTE — espalhado por muitas cópias
+Interpretação      : Candidato forte a assinatura estrutural. Vale BLASTar.
+-----------------------------------------------------------------
+
+K-mer              : TTTTTTTTTTTTTTT
+Tipo               : Homopolímero/Microssatélite (ex: poly-A, AT-repeat)
+Diversidade        : 1 nucleotídeo(s) distinto(s)
+Ocorrências totais : 2312
+Sequências distintas: 243
+Máx. em 1 sequência: 108
+Concentração       : 4.7%
+Distribuição       : ASSINATURA RECORRENTE — espalhado por muitas cópias
+Interpretação      : Candidato forte a assinatura estrutural. Vale BLASTar.
+-----------------------------------------------------------------
+
+K-mer              : AAAAATAAAAAAAAA
+Tipo               : Homopolímero/Microssatélite (ex: poly-A, AT-repeat)
+Diversidade        : 2 nucleotídeo(s) distinto(s)
+Ocorrências totais : 537
+Sequências distintas: 233
+Máx. em 1 sequência: 14
+Concentração       : 2.6%
+Distribuição       : ASSINATURA RECORRENTE — espalhado por muitas cópias
+Interpretação      : Candidato forte a assinatura estrutural. Vale BLASTar.
+-----------------------------------------------------------------
+
+K-mer              : CCATCAGAAAAAAAA
+Tipo               : Motivo composto (sequência específica)
+Diversidade        : 4 nucleotídeo(s) distinto(s)
+Ocorrências totais : 508
+Sequências distintas: 142
+Máx. em 1 sequência: 14
+Concentração       : 2.8%
+Distribuição       : ASSINATURA RECORRENTE — espalhado por muitas cópias
+Interpretação      : Candidato forte a assinatura estrutural. Vale BLASTar.
+-----------------------------------------------------------------
+
+K-mer              : TTTTATGTGCCCCAA
+Tipo               : Motivo composto (sequência específica)
+Diversidade        : 4 nucleotídeo(s) distinto(s)
+Ocorrências totais : 647
+Sequências distintas: 104
+Máx. em 1 sequência: 17
+Concentração       : 2.6%
+Distribuição       : ASSINATURA RECORRENTE — espalhado por muitas cópias
+Interpretação      : Candidato forte a assinatura estrutural. Vale BLASTar.
+-----------------------------------------------------------------
+
+K-mer              : TTTATGTGCCCCAAA
+Tipo               : Motivo composto (sequência específica)
+Diversidade        : 4 nucleotídeo(s) distinto(s)
+Ocorrências totais : 644
+Sequências distintas: 103
+Máx. em 1 sequência: 17
+Concentração       : 2.6%
+Distribuição       : ASSINATURA RECORRENTE — espalhado por muitas cópias
+Interpretação      : Candidato forte a assinatura estrutural. Vale BLASTar.
+-----------------------------------------------------------------
+
+K-mer              : TATGTGCCCCAAAGA
+Tipo               : Motivo composto (sequência específica)
+Diversidade        : 4 nucleotídeo(s) distinto(s)
+Ocorrências totais : 633
+Sequências distintas: 102
+Máx. em 1 sequência: 17
+Concentração       : 2.7%
+Distribuição       : ASSINATURA RECORRENTE — espalhado por muitas cópias
+Interpretação      : Candidato forte a assinatura estrutural. Vale BLASTar.
+-----------------------------------------------------------------
+
+K-mer              : TTATGTGCCCCAAAG
+Tipo               : Motivo composto (sequência específica)
+Diversidade        : 4 nucleotídeo(s) distinto(s)
+Ocorrências totais : 627
+Sequências distintas: 102
+Máx. em 1 sequência: 17
+Concentração       : 2.7%
+Distribuição       : ASSINATURA RECORRENTE — espalhado por muitas cópias
+Interpretação      : Candidato forte a assinatura estrutural. Vale BLASTar.
+-----------------------------------------------------------------
+
+K-mer              : CTTTTATGTGCCCCA
+Tipo               : Motivo composto (sequência específica)
+Diversidade        : 4 nucleotídeo(s) distinto(s)
+Ocorrências totais : 602
+Sequências distintas: 100
+Máx. em 1 sequência: 17
+Concentração       : 2.8%
+Distribuição       : ASSINATURA RECORRENTE — espalhado por muitas cópias
+Interpretação      : Candidato forte a assinatura estrutural. Vale BLASTar.
+-----------------------------------------------------------------
+
+=================================================================
+RESUMO
+=================================================================
+
+  Candidatos a assinatura estrutural recorrente : 15
+  Prováveis expansões locais (ruído/tandem)     : 0
+  Casos intermediários (investigar mais)        : 0
+
+  Os candidatos a assinatura recorrente são os mais indicados
+  para consulta em BLAST/Repbase e inclusão como features
+  prioritárias no treinamento da Árvore de Decisão.
+
+=================================================================
