@@ -118,6 +118,24 @@ def benjamini_hochberg(p_values, alpha=0.05):
 
 
 # ─────────────────────────────────────────────────────────────────────────────
+# FILTRO DE BAIXA COMPLEXIDADE (mesma lógica do analisar_prevalencia_kmers.py)
+# ─────────────────────────────────────────────────────────────────────────────
+
+def diversidade_simbolica(kmer: str) -> int:
+    """
+    Quantos símbolos distintos (A, C, G, T) aparecem no k-mer.
+
+    1-2 = repetição simples (homopolímero/microssatélite, ex: poly-A, AT).
+          Estatisticamente fácil de "dar significativo" em amostras grandes,
+          mas não é evidência de motivo estrutural — é ruído de baixa
+          complexidade (comum em qualquer genoma repetitivo).
+    3-4 = motivo mais específico, candidato real a assinatura de família
+          (ex: terminal de LTR/TIR).
+    """
+    return len(set(kmer))
+
+
+# ─────────────────────────────────────────────────────────────────────────────
 # EXTRAÇÃO E TESTE ESTATÍSTICO
 # ─────────────────────────────────────────────────────────────────────────────
 
@@ -217,6 +235,10 @@ def aplicar_teste_fisher(df_kmers, arquivo_tes, arquivo_ctrl):
 
     df_resultado = pd.DataFrame(p_values)
 
+    # Marca baixa complexidade simbólica (homopolímeros, microssatélites)
+    # ANTES de qualquer filtro — para você poder inspecionar os dois grupos.
+    df_resultado["diversidade_simbolica"] = df_resultado["kmer"].apply(diversidade_simbolica)
+
     # Aplica FDR (Benjamini-Hochberg) — implementação local, sem statsmodels
     reject, p_adjust = benjamini_hochberg(df_resultado["p_value_bruto"], alpha=0.05)
 
@@ -302,12 +324,17 @@ def plotar_vulcao(df, pasta_destino):
     log.info(f"   📊 {os.path.basename(caminho)}")
 
 
-def plotar_top_significativos(df, pasta_destino, top_n=20):
-    """Barras horizontais dos top N k-mers mais significativos."""
-    sig = df[df["significativo"]].nlargest(top_n, "delta_TE").sort_values("delta_TE")
+def plotar_top_significativos(df, pasta_destino, top_n=20, coluna_filtro="significativo",
+                                sufixo=""):
+    """
+    Barras horizontais dos top N k-mers por delta_TE, dentro do subconjunto
+    filtrado por `coluna_filtro` (bool). Use coluna_filtro="candidato_forte"
+    para excluir homopolímeros/microssatélites do gráfico.
+    """
+    sig = df[df[coluna_filtro]].nlargest(top_n, "delta_TE").sort_values("delta_TE")
 
     if sig.empty:
-        log.warning("   ⚠️  Nenhum k-mer significativo encontrado.")
+        log.warning(f"   ⚠️  Nenhum k-mer em '{coluna_filtro}' encontrado.")
         return
 
     fig, ax = plt.subplots(figsize=(10, max(5, len(sig) * 0.4)))
@@ -315,11 +342,13 @@ def plotar_top_significativos(df, pasta_destino, top_n=20):
     bars = ax.barh(sig["kmer"], sig["delta_TE"] * 1000, color="steelblue", edgecolor="white")
     ax.bar_label(bars, fmt="%.6f", padding=3, fontsize=8)
     ax.set_xlabel("delta_TE (frequência relativa × 1000)", fontsize=10)
-    ax.set_title(f"Top {top_n} K-mers estatisticamente significativos", fontsize=12, pad=10)
+    titulo = f"Top {top_n} K-mers — {coluna_filtro}" if not sufixo else f"Top {top_n} K-mers — {sufixo}"
+    ax.set_title(titulo, fontsize=12, pad=10)
     ax.grid(axis="x", linestyle="--", alpha=0.4)
     plt.tight_layout()
 
-    caminho = os.path.join(pasta_destino, f"top{top_n}_kmers_significativos.png")
+    nome = f"top{top_n}_kmers_{coluna_filtro}.png"
+    caminho = os.path.join(pasta_destino, nome)
     plt.savefig(caminho, dpi=300, bbox_inches="tight")
     plt.close()
     log.info(f"   📊 {os.path.basename(caminho)}")
@@ -372,36 +401,65 @@ def main():
     # Ordena por p_value_ajustado
     df_resultado = df_resultado.sort_values("p_value_ajustado")
 
+    # ── Candidato "forte": significativo E não é homopolímero/microssatélite ──
+    # MIN_DIVERSIDADE=3 exige pelo menos 3 dos 4 símbolos (A/C/G/T) distintos
+    # no k-mer, o que já exclui poly-A, poly-T, AT-repeat, GC-repeat etc.
+    MIN_DIVERSIDADE = 3
+    df_resultado["candidato_forte"] = (
+        df_resultado["significativo"] & (df_resultado["diversidade_simbolica"] >= MIN_DIVERSIDADE)
+    )
+
     # Resumo no terminal
     n_sig = df_resultado["significativo"].sum()
+    n_forte = df_resultado["candidato_forte"].sum()
+    n_baixa_complex_sig = int(((df_resultado["significativo"]) &
+                                (df_resultado["diversidade_simbolica"] < MIN_DIVERSIDADE)).sum())
     log.info(f"\n{'─'*60}")
     log.info(f"  RESUMO ESTATÍSTICO")
     log.info(f"{'─'*60}")
     log.info(f"  Total de k-mers testados: {len(df_resultado):,}")
-    log.info(f"  Significativos (p ≤ 0.05): {n_sig}")
+    log.info(f"  Significativos (p ≤ 0.05): {n_sig:,} ({100*n_sig/len(df_resultado):.1f}%)")
+    log.info(f"    ├─ dos quais baixa complexidade (homopolímero/microssat.): {n_baixa_complex_sig:,}")
+    log.info(f"    └─ dos quais candidato_forte (≥{MIN_DIVERSIDADE} símbolos distintos): {n_forte:,}")
     if n_sig > 0:
-        log.info(f"  Taxa de descobertas: {100*n_sig/len(df_resultado):.1f}%")
+        log.info(f"  ⚠️  {100*n_baixa_complex_sig/n_sig:.1f}% dos 'significativos' são baixa complexidade —")
+        log.info(f"      use a coluna candidato_forte (ou diversidade_simbolica) para filtrar, não só p-valor.")
 
-    # Top 10 significativos
-    if n_sig > 0:
+    # Top 10 candidatos fortes (não apenas significativos por p-valor bruto)
+    if n_forte > 0:
         log.info(f"\n{'─'*60}")
-        log.info(f"  TOP 10 K-MERS SIGNIFICATIVOS")
+        log.info(f"  TOP 10 CANDIDATOS FORTES (significativo + diversidade ≥ {MIN_DIVERSIDADE})")
         log.info(f"{'─'*60}")
-        for _, row in df_resultado[df_resultado["significativo"]].head(10).iterrows():
+        top_fortes = df_resultado[df_resultado["candidato_forte"]].nlargest(10, "delta_TE")
+        for _, row in top_fortes.iterrows():
             log.info(f"  {row['kmer']}  "
                      f"p={row['p_value_ajustado']:.2e}  "
-                     f"ΔTE={row['delta_TE']*1000:.6f}‰")
+                     f"ΔTE={row['delta_TE']*1000:.6f}‰  "
+                     f"diversidade={row['diversidade_simbolica']}")
+    else:
+        log.warning(f"  ⚠️  Nenhum candidato_forte encontrado — revise MIN_DIVERSIDADE ou o suporte mínimo do v3.")
 
     # Salva CSV (todos os k-mers testados, com p-valor bruto e ajustado)
     output_csv = os.path.join(pasta_csv, "teste_fisher_resultados.csv")
     df_resultado.to_csv(output_csv, index=False)
-    log.info(f"\n✅  CSV salvo: {output_csv}")
+    log.info(f"\n✅  CSV completo salvo: {output_csv}")
+
+    # Salva CSV separado só com os candidatos fortes — é essa lista que
+    # deve alimentar a próxima etapa (ML), não a lista de "significativo" bruta.
+    output_csv_fortes = os.path.join(pasta_csv, "teste_fisher_candidatos_fortes.csv")
+    df_resultado[df_resultado["candidato_forte"]].sort_values(
+        "delta_TE", ascending=False
+    ).to_csv(output_csv_fortes, index=False)
+    log.info(f"✅  CSV de candidatos fortes salvo: {output_csv_fortes}")
 
     # Gráficos
     log.info("📈  Gerando gráficos...")
     plotar_distribuicao_pvalores(df_resultado, pasta_graficos)
     plotar_vulcao(df_resultado, pasta_graficos)
-    plotar_top_significativos(df_resultado, pasta_graficos, top_n=20)
+    plotar_top_significativos(df_resultado, pasta_graficos, top_n=20,
+                               coluna_filtro="significativo", sufixo="apenas p-valor (inclui baixa complexidade)")
+    plotar_top_significativos(df_resultado, pasta_graficos, top_n=20,
+                               coluna_filtro="candidato_forte", sufixo="candidatos fortes (filtrado)")
 
     log.info(f"\n🎉  Concluído! Próximo passo: ML com os k-mers significativos")
 
