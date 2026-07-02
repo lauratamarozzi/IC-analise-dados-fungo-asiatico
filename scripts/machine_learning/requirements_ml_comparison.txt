@@ -1,0 +1,46 @@
+# ============================================================================
+# requirements_ml_comparison.txt
+# ============================================================================
+# Dependências para comparacao_manual_vs_deep.py
+#
+# Instale com:
+#   pip install -r requirements_ml_comparison.txt
+#
+# Ou no Windows (se der erro de permissão):
+#   pip install -r requirements_ml_comparison.txt --user
+# ============================================================================
+
+# Bioinformatics
+biopython>=1.80
+
+# Data processing
+pandas>=1.4.0
+numpy>=1.21.0
+
+# Visualization
+matplotlib>=3.5.0
+
+# Machine Learning - Classical
+scikit-learn>=1.0.0
+
+# Machine Learning - Deep Learning
+# ⚠️ TensorFlow é pesado (~2 GB download + instalação)
+# Se rodar em CPU, pode ser lento mas funciona
+# Para GPU (recomendado): instale tensorflow[and-cuda] em vez disso
+tensorflow>=2.10.0
+
+# Utilities
+rich>=12.0.0
+openpyxl>=3.8.0
+
+# ============================================================================
+# OPCIONAL: Melhorias de desempenho
+# ============================================================================
+# Se quiser acelerar TensorFlow com GPU NVIDIA:
+#   pip install tensorflow[and-cuda]==2.13.0
+#   (requer NVIDIA drivers + CUDA toolkit)
+#
+# Se tiver Mac com Apple Silicon:
+#   conda install -c apple tensorflow-deps
+#   python -m pip install tensorflow-macos tensorflow-metal
+# ============================================================================

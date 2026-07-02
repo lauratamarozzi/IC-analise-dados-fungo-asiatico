@@ -1,0 +1,166 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║                   🚀 COMPARAÇÃO: MANUAL vs. DEEP LEARNING                 ║
+║                   Feature Engineering vs. Autofeaturization               ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+════════════════════════════════════════════════════════════════════════════
+ ANTES DE RODAR
+════════════════════════════════════════════════════════════════════════════
+
+✅ Você deve ter rodado antes:
+   1. subtracao_grafos_v3.py     → gera features_kmers_v3_bidirecional.xlsx
+   2. teste_fisher_fdr.py         → gera teste_fisher_candidatos_fortes.csv
+
+✅ Sua pasta deve estar assim:
+   icanalise-dados-ferrugem-asiatica/
+   ├── scripts/
+   │   ├── subtracao_grafos_v3.py       ✓ (ja rodou)
+   │   ├── teste_fisher_fdr.py          ✓ (ja rodou)
+   │   └── comparacao_manual_vs_deep.py ← NOVO (use esse!)
+   │
+   ├── dados_limpos/
+   │   ├── balanceado/K8108_TEs_balanceado.fasta
+   │   └── K8108_genes_nao_TEs.fasta
+   │
+   └── resultados/
+       ├── excel/features_kmers_v3_bidirecional.xlsx
+       ├── csv/teste_fisher_candidatos_fortes.csv
+       └── graficos/ [imagens do Fisher]
+
+════════════════════════════════════════════════════════════════════════════
+ PASSO 1: INSTALAR DEPENDÊNCIAS (só primeira vez)
+════════════════════════════════════════════════════════════════════════════
+
+Abra o PowerShell/Terminal no seu computador e rode:
+
+    pip install -r requirements_ml_comparison.txt
+
+Ou instale manualmente:
+
+    pip install biopython pandas numpy matplotlib scikit-learn tensorflow rich openpyxl
+
+⚠️  Se der erro, tente:
+
+    pip install -r requirements_ml_comparison.txt --break-system-packages
+
+════════════════════════════════════════════════════════════════════════════
+ PASSO 2: RODAR O SCRIPT
+════════════════════════════════════════════════════════════════════════════
+
+No PowerShell/Terminal, navegue até a pasta scripts/:
+
+    cd C:\Users\[seu_usuario]\...\scripts
+
+Depois rode:
+
+    python comparacao_manual_vs_deep.py
+
+═══════════════════════════════════════════════════════════════════════════
+ TEMPO ESPERADO
+════════════════════════════════════════════════════════════════════════════
+
+CPU (seu computador):         ~10-15 minutos
+GPU NVIDIA (se tiver):        ~3-5 minutos
+
+Durante a execução você verá mensagens assim:
+
+    🚀 COMPARACAO: FEATURE ENGINEERING MANUAL vs. AUTOFEATURIZATION
+    📖 Carregando sequências...
+    🔧 Preparando features manuais...
+    🤖 Treinando Random Forest (features manuais)...
+    ✅ Acurácia: 0.8734
+    🧠 Treinando CNN 1D (autofeaturization)...
+    ✅ Acurácia: 0.8912
+    📊 Gerando relatório comparativo...
+
+════════════════════════════════════════════════════════════════════════════
+ PASSO 3: INTERPRETAR RESULTADOS
+════════════════════════════════════════════════════════════════════════════
+
+Depois que terminar, abra ESTE arquivo:
+
+    resultados/comparacao/relatorio_comparativo.txt
+
+Ele vai te dizer:
+  ✓ Qual modelo é melhor (Random Forest ou CNN)?
+  ✓ Por quantos % um é melhor que o outro
+  ✓ Quando usar cada um
+  ✓ Próximos passos recomendados
+
+════════════════════════════════════════════════════════════════════════════
+ SAÍDAS IMPORTANTES
+════════════════════════════════════════════════════════════════════════════
+
+Depois de rodar, você terá:
+
+📊 resultados/comparacao/
+   ├─ relatorio_comparativo.txt   ← LEIA ISTO PRIMEIRO!
+   ├─ comparacao_metricas.csv     (tabela lado-a-lado)
+   ├─ comparacao_visual.png       (gráfico para o TCC)
+   └─ [matrizes de confusão e curvas ROC]
+
+🤖 resultados/ml_manual/
+   ├─ modelo_random_forest.pkl    (modelo treinado)
+   ├─ features_importancia.png    (quais k-mers importam?)
+   └─ [métricas de desempenho]
+
+🧠 resultados/ml_deep/
+   ├─ modelo_cnn_1d.h5           (rede neural treinada)
+   ├─ historico_treinamento.png  (como aprendeu?)
+   └─ [métricas de desempenho]
+
+════════════════════════════════════════════════════════════════════════════
+ PARA SEU TCC/APRESENTAÇÃO
+════════════════════════════════════════════════════════════════════════════
+
+Inclua no seu trabalho:
+
+1. Gráfico:  resultados/comparacao/comparacao_visual.png
+   Mostra acurácia, precisão, recall, F1, ROC-AUC lado-a-lado
+
+2. Texto:    Um parágrafo sobre comparação (extraia de relatorio_comparativo.txt)
+   Exemplo: "Treinamos um Random Forest com features manuais (Fisher + FDR)
+            e uma CNN 1D com autofeaturization. O modelo de Deep Learning
+            alcançou 89.12% de acurácia vs. 87.34% do Random Forest..."
+
+3. Discussão: Por que escolheu um sobre o outro?
+   - Random Forest: mais interpretável, explicável
+   - CNN:         potencialmente mais preciso, descobrir padrões automáticos
+
+════════════════════════════════════════════════════════════════════════════
+ TROUBLESHOOTING
+════════════════════════════════════════════════════════════════════════════
+
+❌ "ModuleNotFoundError: No module named 'tensorflow'"
+   → pip install tensorflow
+
+❌ "ModuleNotFoundError: No module named 'sklearn'"
+   → pip install scikit-learn
+
+❌ "File not found: features_kmers_v3_bidirecional.xlsx"
+   → Rode subtracao_grafos_v3.py primeiro!
+
+❌ Script muito lento
+   → Normal em CPU. Espera ~10 minutos, ou instale GPU (CUDA)
+
+❌ Aviso sobre GPU
+   → Só aviso, não afeta o resultado. Script roda normal em CPU.
+
+════════════════════════════════════════════════════════════════════════════
+ DÚVIDAS?
+════════════════════════════════════════════════════════════════════════════
+
+1. Leia o README_COMPARACAO_ML.md (tem tudo explicado)
+2. Procure na seção [TROUBLESHOOTING] acima
+3. Abra o arquivo relatorio_comparativo.txt após rodar
+
+════════════════════════════════════════════════════════════════════════════
+ RESUMO RÁPIDO
+════════════════════════════════════════════════════════════════════════════
+
+1. pip install -r requirements_ml_comparison.txt
+2. python comparacao_manual_vs_deep.py
+3. Abra resultados/comparacao/relatorio_comparativo.txt
+4. Veja qual modelo ganhou e use nos próximos passos!
+
+════════════════════════════════════════════════════════════════════════════

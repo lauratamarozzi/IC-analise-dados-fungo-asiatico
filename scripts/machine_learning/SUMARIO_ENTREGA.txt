@@ -1,0 +1,293 @@
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                                                                               ║
+║  ✅ NOVO SCRIPT ENTREGUE: comparacao_manual_vs_deep.py                       ║
+║                                                                               ║
+║  Compara Feature Engineering Manual vs. Autofeaturization (Deep Learning)    ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+
+═══════════════════════════════════════════════════════════════════════════════
+ 📦 ARQUIVOS ENTREGUES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. comparacao_manual_vs_deep.py
+   └─ Script completo (800+ linhas, bem comentado)
+   └─ Treina 2 modelos em paralelo
+   └─ Gera relatório comparativo automático
+   
+2. README_COMPARACAO_ML.md
+   └─ Documentação técnica detalhada
+   └─ Explica saídas
+   └─ Interpretação de métricas
+   
+3. requirements_ml_comparison.txt
+   └─ Dependências prontas para instalar
+   
+4. COMO_RODAR.txt
+   └─ Guia passo-a-passo (este arquivo!)
+   
+5. SUMARIO_ENTREGA.txt
+   └─ O que você recebeu (este arquivo!)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+ 🎯 O QUE O SCRIPT FAZ
+═══════════════════════════════════════════════════════════════════════════════
+
+                          ABORDAGEM MANUAL
+                          
+         K-mers + Fisher + FDR (candidatos_fortes.csv)
+                          ↓
+               Random Forest (100 árvores)
+                          ↓
+    Acurácia, Precisão, Recall, F1, ROC-AUC
+    Features Importance
+    Matriz de Confusão
+    Curva ROC
+
+
+                         ABORDAGEM DEEP
+                         
+            Sequência DNA bruta (A, C, G, T)
+                          ↓
+                   CNN 1D (autofeaturization)
+                   - 3 camadas Conv1D
+                   - GlobalMaxPooling
+                   - 2 camadas Dense
+                          ↓
+    Acurácia, Precisão, Recall, F1, ROC-AUC
+    Histórico de Treinamento
+    Matriz de Confusão
+    Curva ROC
+
+
+                    RELATÓRIO COMPARATIVO
+                    
+       Tabela lado-a-lado
+       Visualização em barras
+       Texto com conclusões
+
+
+═══════════════════════════════════════════════════════════════════════════════
+ ⚙️ COMO INSTALAR E RODAR
+═══════════════════════════════════════════════════════════════════════════════
+
+PASSO 1: Instalar dependências (primeira vez apenas)
+───────────────────────────────────────────────────
+
+    pip install -r requirements_ml_comparison.txt
+
+(Ou instale manualmente: tensorflow, scikit-learn, keras, biopython, etc)
+
+
+PASSO 2: Rodar o script
+───────────────────────
+
+    cd scripts/
+    python comparacao_manual_vs_deep.py
+
+Tempo: ~10-15 minutos em CPU, ~3-5 minutos em GPU
+
+
+PASSO 3: Interpretar resultados
+────────────────────────────────
+
+Abra este arquivo:
+
+    resultados/comparacao/relatorio_comparativo.txt
+
+Ele diz:
+  ✓ Qual modelo ganhou
+  ✓ Quantos % de diferença
+  ✓ Qual usar em qual situação
+  ✓ Próximos passos
+
+
+═══════════════════════════════════════════════════════════════════════════════
+ 📊 SAÍDAS GERADAS
+═══════════════════════════════════════════════════════════════════════════════
+
+Após rodar, você terá:
+
+resultados/ml_manual/
+├─ modelo_random_forest.pkl       ← modelo salvo para reusar
+├─ features_importancia.png       ← quais k-mers mais importam?
+├─ matriz_confusao_manual.png
+├─ roc_curve_manual.png
+└─ metricas_manual.csv
+
+resultados/ml_deep/
+├─ modelo_cnn_1d.h5              ← rede neural treinada
+├─ historico_treinamento.png     ← como aprendeu em cada epoch
+├─ matriz_confusao_deep.png
+├─ roc_curve_deep.png
+└─ metricas_deep.csv
+
+resultados/comparacao/              ← LEIA ISTO!
+├─ relatorio_comparativo.txt       ← Análise completa
+├─ comparacao_metricas.csv         ← Tabela lado-a-lado
+├─ comparacao_visual.png           ← Gráfico para TCC/apresentação
+├─ matriz_confusao_manual.png
+├─ matriz_confusao_deep.png
+├─ roc_curve_manual.png
+└─ roc_curve_deep.png
+
+
+═══════════════════════════════════════════════════════════════════════════════
+ 📈 O QUE VOCÊ PODE COMPARAR
+═══════════════════════════════════════════════════════════════════════════════
+
+Métrica          O que é                        Intervalo
+─────────────────────────────────────────────────────────
+Acurácia         % total de acertos            0.0 - 1.0 (0-100%)
+Precisão         De TE pred., quantos reais?  0.0 - 1.0
+Recall           De TE reais, quantos achei?  0.0 - 1.0
+F1-Score         Média harmônica              0.0 - 1.0
+ROC-AUC          Área sob curva               0.5 - 1.0 (0.5 = aleatório)
+
+Exemplo de resultado:
+
+  Random Forest:  Acurácia=87.3%, Precisão=86.2%, Recall=85.2%, F1=85.7%, AUC=0.945
+  CNN 1D:         Acurácia=89.1%, Precisão=88.3%, Recall=87.6%, F1=87.9%, AUC=0.962
+  
+  → CNN ganhou (~2% de acurácia melhor)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+ 🎓 PARA SEU TCC/APRESENTAÇÃO
+═══════════════════════════════════════════════════════════════════════════════
+
+Inclua:
+
+1. **Seção de Métodos:**
+   "Treinamos dois modelos de ML para classificação de TEs: (1) Random Forest
+    com features manuais extraídas via Fisher + FDR; (2) CNN 1D com
+    autofeaturization. Utilizamos validação treino/teste 80/20 com stratificação."
+
+2. **Figura:**
+   resultados/comparacao/comparacao_visual.png
+   (Gráfico de barras mostrando métricas lado-a-lado)
+
+3. **Tabela:**
+   resultados/comparacao/comparacao_metricas.csv
+   (Copie para tabela no Word/Google Docs)
+
+4. **Discussão:**
+   "O modelo [vencedor] alcançou [X%] de acurácia, superando o baseline
+    em [Y%]. Isso demonstra que [interpretação biologicamente relevante]."
+
+
+═══════════════════════════════════════════════════════════════════════════════
+ 🔬 INTERPRETAÇÃO TÉCNICA
+═══════════════════════════════════════════════════════════════════════════════
+
+RANDOM FOREST (Manual Features):
+✅ Vantagens:
+   • Interpretável: sabe quais k-mers importam
+   • Rápido: treina em segundos
+   • Transparente: pode explicar cada decisão
+   
+❌ Desvantagens:
+   • Limitado: features que você não pensou não aparecem
+   • Manual: requer expertise para extrair boas features
+
+CNN 1D (Autofeaturization):
+✅ Vantagens:
+   • Automático: descobre features sozinho
+   • Flexível: aprende padrões de diferentes escalas
+   • Moderno: estado da arte em bioinformática
+   
+❌ Desvantagens:
+   • "Caixa preta": difícil entender decisões específicas
+   • Precisa mais dado para treinar bem
+   • Mais lento e requer mais poder computacional
+
+
+═══════════════════════════════════════════════════════════════════════════════
+ ⚡ TROUBLESHOOTING RÁPIDO
+═══════════════════════════════════════════════════════════════════════════════
+
+Erro: "ModuleNotFoundError: No module named 'tensorflow'"
+Solução: pip install tensorflow
+
+Erro: "ModuleNotFoundError: No module named 'sklearn'"
+Solução: pip install scikit-learn
+
+Erro: "FileNotFoundError: teste_fisher_candidatos_fortes.csv"
+Solução: Rode teste_fisher_fdr.py primeiro!
+
+Script muito lento
+Solução: Espere (normal em CPU ~15 min) ou instale GPU
+
+GPU não detectada
+Solução: Normal, script roda em CPU. Só aviso, não problema.
+
+
+═══════════════════════════════════════════════════════════════════════════════
+ 🚀 PRÓXIMOS PASSOS (após comparação)
+═══════════════════════════════════════════════════════════════════════════════
+
+1. **Escolher o melhor modelo**
+   Baseado em:
+   • Acurácia (que % de TEs acertou?)
+   • Interpretabilidade (precisa explicar no TCC?)
+   • Disponibilidade de recursos (tempo/poder computacional)
+
+2. **Validação em dados novos**
+   • Teste em sequências nunca vistas
+   • Teste em outro isolado/espécie se tiver
+
+3. **Análise de features**
+   • Random Forest: veja features_importancia.png (quais k-mers contam?)
+   • CNN: visualize ativações das camadas convolucionais
+
+4. **Otimização**
+   • Hyperparameter tuning (ajustar parâmetros do modelo)
+   • Ensemble methods (combinar os dois modelos?)
+
+5. **Publicação**
+   • Documente o pipeline completo
+   • Compare com ferramentas existentes (DeepTE, RepeatModeler, etc)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+ 📝 RESUMO EXECUTIVO
+═══════════════════════════════════════════════════════════════════════════════
+
+Você agora tem um pipeline completo de Machine Learning para detectar TEs:
+
+  Dados brutos (FASTA)
+         ↓
+  Extração de k-mers (subtracao_grafos_v3.py)
+         ↓
+  Teste estatístico (teste_fisher_fdr.py)
+         ↓
+  Comparação de modelos (comparacao_manual_vs_deep.py) ← NOVO!
+         ↓
+  Melhor modelo escolhido
+         ↓
+  Relatório + Gráficos para TCC
+
+
+═══════════════════════════════════════════════════════════════════════════════
+ ✨ RESUMO RÁPIDO (3 PASSOS)
+═══════════════════════════════════════════════════════════════════════════════
+
+1. pip install -r requirements_ml_comparison.txt
+
+2. python comparacao_manual_vs_deep.py
+
+3. Abra resultados/comparacao/relatorio_comparativo.txt
+
+Done! 🎉
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+Dúvidas? Leia:
+  - README_COMPARACAO_ML.md (documentação técnica)
+  - COMO_RODAR.txt (passo-a-passo)
+  - relatorio_comparativo.txt (após rodar)
+
+═══════════════════════════════════════════════════════════════════════════════

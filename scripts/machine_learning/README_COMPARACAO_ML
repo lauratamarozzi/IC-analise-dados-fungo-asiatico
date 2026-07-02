@@ -1,0 +1,271 @@
+# 🔬 Comparação: Feature Engineering Manual vs. Autofeaturization
+
+## O que este script faz
+
+Treina **dois modelos em paralelo** e compara os resultados:
+
+```
+                    ABORDAGEM MANUAL                    ABORDAGEM DEEP
+                                                         
+    Sequência DNA                                       Sequência DNA
+        ↓                                                    ↓
+  [Extração manual]                                   [CNN aprende sozinha]
+  - k-mers                                            - Convolução 1D
+  - Frequência relativa                               - Features automáticas
+  - Diversidade simbólica                             - Múltiplas escalas
+        ↓                                                    ↓
+   620k features                                      Features aprendidas
+        ↓                                                    ↓
+  Random Forest                                        CNN 1D
+        ↓                                                    ↓
+  CLASSIFICAÇÃO TE/CONTROLE (interpretável)     CLASSIFICAÇÃO TE/CONTROLE (potencialmente melhor)
+```
+
+## Pré-requisitos
+
+### 1. **Ter rodado antes:**
+- ✅ `subtracao_grafos_v3.py` → gera `excel/features_kmers_v3_bidirecional.xlsx`
+- ✅ `teste_fisher_fdr.py` → gera `csv/teste_fisher_candidatos_fortes.csv`
+
+### 2. **Instalar dependências:**
+
+```bash
+pip install biopython pandas numpy matplotlib scikit-learn tensorflow rich openpyxl
+```
+
+**Ou, se tiver Anaconda:**
+```bash
+conda install -c conda-forge biopython pandas numpy matplotlib scikit-learn tensorflow rich openpyxl
+```
+
+**⚠️ Aviso TensorFlow/GPU:**
+- TensorFlow roda em CPU por padrão (funciona, mas lento)
+- Se tiver GPU NVIDIA, instale `tensorflow[and-cuda]` para acelerar ~10x
+
+## Como rodar
+
+### No seu computador (Windows/Mac/Linux):
+```bash
+cd scripts/
+python comparacao_manual_vs_deep.py
+```
+
+**Tempo esperado:**
+- Preparação de dados: ~2-3 minutos
+- Random Forest: ~1 minuto
+- CNN 1D: ~5-10 minutos (CPU), ~1-2 minutos (GPU)
+- **Total: ~10-15 minutos (CPU)**
+
+### Se rodar na primeira vez:
+Você verá output como:
+```
+================================================================================
+🚀 COMPARACAO: FEATURE ENGINEERING MANUAL vs. AUTOFEATURIZATION
+================================================================================
+
+📖 Carregando sequências...
+   TE:       5,871 sequências
+   Controle: 15,288 sequências
+
+📊 Carregando k-mers candidatos fortes...
+   100,523 k-mers candidatos fortes
+
+🔧 Preparando features manuais...
+  Extraindo k-mers por sequência... ━━━━━━━━━━━━━━━━━━━━━ 1/1
+
+🤖 Treinando Random Forest (features manuais)...
+   ✅ Acurácia: 0.8734
+   ✅ Precisão: 0.8621
+   ✅ Recall: 0.8523
+   ✅ F1-Score: 0.8572
+   ✅ ROC-AUC: 0.9456
+
+🧠 Treinando CNN 1D (autofeaturization)...
+   Treinando (isso pode levar alguns minutos)...
+   ✅ Acurácia: 0.8912
+   ✅ Precisão: 0.8834
+   ✅ Recall: 0.8756
+   ✅ F1-Score: 0.8795
+   ✅ ROC-AUC: 0.9623
+
+📊 Gerando relatório comparativo...
+[... relatório completo ...]
+```
+
+## Saídas geradas
+
+A estrutura de pastas ficará assim:
+
+```
+resultados/
+├── excel/
+│   └── features_kmers_v3_bidirecional.xlsx
+├── csv/
+│   ├── teste_fisher_resultados.csv
+│   └── teste_fisher_candidatos_fortes.csv
+├── graficos/
+│   └── [gráficos do Fisher]
+│
+├── ml_manual/                          ← NOVO
+│   ├── modelo_random_forest.pkl        (modelo salvo, pode reusar)
+│   ├── features_importancia.png        (quais k-mers mais importam?)
+│   ├── matriz_confusao_manual.png
+│   └── roc_curve_manual.png
+│
+├── ml_deep/                            ← NOVO
+│   ├── modelo_cnn_1d.h5               (rede neural salva)
+│   ├── historico_treinamento.png      (como a rede aprendeu ao longo do tempo)
+│   ├── matriz_confusao_deep.png
+│   └── roc_curve_deep.png
+│
+└── comparacao/                         ← NOVO - LEIA ISTO!
+    ├── comparacao_metricas.csv        (tabela lado-a-lado)
+    ├── comparacao_visual.png          (gráficos de barras)
+    ├── relatorio_comparativo.txt      (análise detalhada)
+    └── [matrizes e ROCs de ambos]
+```
+
+## Como interpretar os resultados
+
+### **Arquivo 1: `comparacao/relatorio_comparativo.txt`** ← COMECE AQUI
+Texto estruturado com:
+- Desempenho de cada modelo (Acurácia, Precisão, Recall, F1, ROC-AUC)
+- Interpretação de cada um
+- Conclusão: qual modelo é melhor e por quê?
+
+Exemplo de saída:
+```
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                 RELATÓRIO COMPARATIVO DE MODELOS DE ML                       ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+MODELO 1: RANDOM FOREST (FEATURE ENGINEERING MANUAL)
+  • Features: 100,523 k-mers candidatos_fortes
+  • Tempo de treino: instant
+  Desempenho:
+  ├─ Acurácia:  0.8734 (87.34%)
+  ├─ Precisão:  0.8621
+  ├─ Recall:    0.8523
+  ├─ F1-Score:  0.8572
+  └─ ROC-AUC:   0.9456
+
+MODELO 2: CNN 1D (AUTOFEATURIZATION - DEEP LEARNING)
+  • Features: Aprendidas automaticamente pela rede
+  • Arquitetura: 3 camadas conv + GlobalMaxPooling + 2 camadas dense
+  • Tempo de treino: 28 epochs
+  Desempenho:
+  ├─ Acurácia:  0.8912 (89.12%)
+  ├─ Precisão:  0.8834
+  ├─ Recall:    0.8756
+  ├─ F1-Score:  0.8795
+  └─ ROC-AUC:   0.9623
+
+RESULTADO: Deep Learning (CNN 1D) é MELHOR
+  A autofeaturization descobriu padrões que manual engineering não capturou.
+```
+
+### **Arquivo 2: `comparacao/comparacao_visual.png`**
+Gráfico de barras lado-a-lado mostrando cada métrica para os dois modelos. 
+**Visualmente fácil de incluir em apresentações/TCC.**
+
+### **Arquivo 3: `ml_manual/features_importancia.png`**
+Top 20 k-mers mais importantes para o Random Forest. 
+Útil para: "Qual k-mer o modelo confia mais?"
+
+### **Arquivo 4: `ml_deep/historico_treinamento.png`**
+4 gráficos mostrando como a CNN aprendeu ao longo de cada epoch:
+- Loss (erro) caindo? → treinamento normal
+- Accuracy subindo? → rede ficando melhor
+- Plateau (platô)? → não melhora mais, parou de aprender
+
+### **Arquivo 5: Matrizes de confusão**
+Quantos TEs foram classificados corretamente?
+Quantos genes foram classificados corretamente?
+
+Formato:
+```
+           Predito
+           Controle  TE
+Real  ├─ Controle  [2500]  [200]    ← acertou 2500 controles, errou 200
+      └─ TE          [150]  [1000]   ← acertou 1000 TEs, errou 150
+```
+
+### **Arquivo 6: Curvas ROC**
+Mostra trade-off entre Sensibilidade e Especificidade.
+- **Curva perto do canto superior esquerdo** = modelo excelente
+- **Curva diagonal** = modelo aleatório
+- **AUC (área sob a curva)** resume em um número (0.5 = aleatório, 1.0 = perfeito)
+
+## Interpretando as métricas
+
+| Métrica | O que é | Quando importa |
+|---------|---------|---|
+| **Acurácia** | % total de acertos | Métrica geral, mas pode enganar com dados desbalanceados |
+| **Precisão** | De tudo que disse "TE", quantos eram reais? | Importante se falso positivo é caro |
+| **Recall** | De todos os TEs reais, quantos encontrei? | Importante se perder um TE é caro |
+| **F1-Score** | Média harmônica de Precisão e Recall | Bom resumo para dados desbalanceados |
+| **ROC-AUC** | Área sob a curva ROC (0.5-1.0) | Robusto contra desbalanceamento |
+
+## Decisão: qual modelo usar?
+
+### Use **Random Forest (Manual)** se:
+- ✅ Precisa entender por quê o modelo decidiu algo (TCC/publicação)
+- ✅ Quer treinar rápido
+- ✅ Tem poucos dados (<10k sequências)
+- ✅ Poder computacional limitado (sem GPU)
+
+### Use **CNN 1D (Deep)** se:
+- ✅ A acurácia for significativamente melhor (>5% de diferença)
+- ✅ Vai usar em múltiplos organismos (escalabilidade)
+- ✅ Tem GPU disponível
+- ✅ "Caixa preta" é aceitável
+
+## Próximos passos
+
+### 1. **Validação em dados novos**
+   ```python
+   # Depois de treinar um modelo, use-o em sequências nunca vistas
+   modelo.predict(X_novo)
+   ```
+
+### 2. **Análise de features (interpretabilidade)**
+   - Random Forest: veja `features_importancia.png`
+   - CNN: visualize ativações de cada camada convolucional
+
+### 3. **Para seu TCC/Paper**
+   - Relatório: "Comparamos duas estratégias de ML..."
+   - Gráfico: `comparacao_visual.png`
+   - Discussão: qual é biologicamente mais interpretável?
+
+## Troubleshooting
+
+### **Erro: `ModuleNotFoundError: No module named 'tensorflow'`**
+```bash
+pip install tensorflow --break-system-packages
+```
+
+### **Erro: `ModuleNotFoundError: No module named 'sklearn'`**
+```bash
+pip install scikit-learn --break-system-packages
+```
+
+### **Aviso: `GPU not detected` (isso é normal)**
+```
+2024-XX-XX XX:XX:XX.XXXXXX I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. 
+You may see slightly different numerical results due to floating-point round-off errors from different computation orders...
+```
+Isso é só aviso, não erro. Script roda em CPU normalmente.
+
+### **Script muito lento?**
+- Use GPU (instale CUDA + `tensorflow[and-cuda]`)
+- Ou rode em um servidor com GPU (Google Colab, AWS, Kaggle)
+
+### **Falta disco?**
+TensorFlow baixa modelos pré-treinados. Se faltar espaço:
+```bash
+pip install tensorflow --no-cache-dir
+```
+
+---
+
+**Dúvidas? Leia `comparacao/relatorio_comparativo.txt` primeiro!**
