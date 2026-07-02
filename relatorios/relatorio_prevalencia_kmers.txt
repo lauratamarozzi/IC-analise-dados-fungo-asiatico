@@ -4,7 +4,7 @@ Projeto: Caracterização de TEs - P. pachyrhizi (K8108)
 Autora:  Laura Tamarozzi
 =================================================================
 
-Arquivo analisado : C:\Users\Usuario\OneDrive\Documentos\FACULDADE\iniciação científica\projeto_gramep\scripts\..\dados_limpos\balanceado\K8108_TEs_balanceado.fasta
+Arquivo analisado : C:\Users\Usuario\OneDrive\Documentos\FACULDADE\iniciação científica\ic-analise-dados-ferrugem-asiatica\scripts\..\dados_limpos\balanceado\K8108_TEs_balanceado.fasta
 K-mers investigados: 15
 
 =================================================================
